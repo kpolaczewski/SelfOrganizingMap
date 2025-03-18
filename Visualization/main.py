@@ -1,7 +1,8 @@
 from matplotlib import pyplot as plt
+import os
 
-filePath = r"D:\PROGRAMOWANIE\Studia\Sieci Neuronowe 2\SelfOrganizingMap\SelfOrganizingMap\accuracy.txt"
-
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+filePath = os.path.join(parent_dir, 'SelfOrganizingMap', 'accuracy.txt')
 with open(filePath, "r") as f:
     text = f.read()
 
