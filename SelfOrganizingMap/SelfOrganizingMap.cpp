@@ -71,6 +71,6 @@ int main() {
     }*/
 
     Som som = Som(features, labels, 8, 8, 0.21, 1);
-    som.train(60, 0.35, "./accuracy.txt");
+    som.train(60, 0.35, "./accuracy.txt", "./labels.txt");
     return 0;
 }

@@ -119,12 +119,18 @@ public:
         this->labels = pair.second;
     }
 
-    void train(int epochs, float train_test_split, std::string outputFilePath) {
-        std::ofstream file(outputFilePath);
-        if (!file.is_open()) {
-            std::cerr << "Can't open the output file path" << std::endl;
+    void train(int epochs, float train_test_split, std::string outputFilePath, std::string labelMapFilePath) {
+        std::ofstream accuracyFile(outputFilePath);
+        if (!accuracyFile.is_open()) {
+            std::cerr << "Can't open the accuracy file path" << std::endl;
             return;
         }
+        std::ofstream labelMapFile(labelMapFilePath);
+        if (!labelMapFile.is_open()) {
+            std::cerr << "Can't open the label map file path" << std::endl;
+            return;
+        }
+
 
         DataTrainTestSplit split = inputDataManager.train_test_split(features, labels, train_test_split);
 
@@ -139,12 +145,21 @@ public:
             }
             double accuracy = calculateAccuracy(split.X_test, split.Y_test);
             int epoch = i + 1;
-            file << epoch << "," << accuracy << std::endl;
+            accuracyFile << epoch << "," << accuracy << std::endl;
+            labelMapFile << "epoch: " << epoch << std::endl;
+            for (size_t j = 0; j < gridRow; j++) {
+                for (size_t z = 0; z < gridCol; z++) {
+                    labelMapFile << labelMap[j][z] << " ";
+                }
+                labelMapFile << std::endl;
+            }
+            labelMapFile << ";" << std::endl;
             learningRate *= 0.995;
             radius *= 0.995;
             std::cout << "Epoch: " << epoch << ", Learning Rate: " << learningRate << ", Radius: " << radius << ", Accuracy: " << accuracy << std::endl;
         }
-        file.close();
+        accuracyFile.close();
+        labelMapFile.close();
     }
 
     int predict(const std::vector<double>& input) {
